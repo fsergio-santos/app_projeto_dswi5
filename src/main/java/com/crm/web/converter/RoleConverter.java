@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import com.crm.model.Role;
-import com.crm.service.RoleService;
+import com.crm.domain.model.Role;
+import com.crm.domain.service.RoleService;
 
 
 @Component

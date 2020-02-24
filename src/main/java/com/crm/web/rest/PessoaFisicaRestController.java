@@ -7,9 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.crm.model.Pessoa;
-import com.crm.model.PessoaFisica;
-import com.crm.service.PessoaFisicaService;
+import com.crm.domain.model.PessoaFisica;
+import com.crm.domain.service.PessoaFisicaService;
 
 @RestController
 @RequestMapping(value="/rest",

@@ -18,11 +18,11 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.crm.config.CrmConfig;
+import com.crm.domain.model.Pessoa;
+import com.crm.domain.repository.filtros.PessoaFiltro;
+import com.crm.domain.service.PessoaService;
+import com.crm.domain.service.exceptions.EmailExistente;
 import com.crm.web.page.PageWrapper;
-import com.crm.model.Pessoa;
-import com.crm.repository.filtros.PessoaFiltro;
-import com.crm.service.PessoaService;
-import com.crm.service.exceptions.EmailExistente;
 
 @Controller
 @RequestMapping(value="/pessoa")

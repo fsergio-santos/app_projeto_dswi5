@@ -24,13 +24,11 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.crm.config.CrmConfig;
+import com.crm.domain.model.PessoaFisica;
+import com.crm.domain.model.enumerate.Sexo;
+import com.crm.domain.repository.filtros.PessoaFisicaFiltro;
+import com.crm.domain.service.PessoaFisicaService;
 import com.crm.web.page.PageWrapper;
-import com.crm.model.PessoaFisica;
-import com.crm.model.enumerate.Sexo;
-import com.crm.repository.filtros.PessoaFisicaFiltro;
-import com.crm.service.PessoaFisicaService;
-
-import groovyjarjarpicocli.CommandLine.Model;
 
 @Controller
 @RequestMapping(value="/pessoa_fisica")

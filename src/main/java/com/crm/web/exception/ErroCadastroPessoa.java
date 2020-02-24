@@ -3,8 +3,6 @@ package com.crm.web.exception;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.crm.model.dto.PessoaDTO;
-
 public class ErroCadastroPessoa {
 	
 	//private PessoaDTO pessoaDTO;

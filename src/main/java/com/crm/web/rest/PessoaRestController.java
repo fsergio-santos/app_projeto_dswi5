@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.crm.model.Pessoa;
-import com.crm.model.dto.PessoaDTO;
-import com.crm.service.PessoaService;
+import com.crm.domain.model.Pessoa;
+import com.crm.domain.model.dto.PessoaDTO;
+import com.crm.domain.service.PessoaService;
 import com.crm.web.exception.ErroCadastroPessoa;
 
 @RestController
