@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+
+</head>
+<body>
+    <section layout:fragment="corpo">
+	<div class="app-title">
+		<div>
+			<h1>
+				<i class="fa fa-edit"></i>Cadastro de pessoa
+			</h1>
+		</div>
+		<ul class="app-breadcrumb breadcrumb">
+			<li class="breadcrumb-item"><i class="fa fa-search fa-lg"></i></li>
+			<li class="breadcrumb-item"><a th:href="@{/pessoa/lista_pessoa}">Pesquisa Pessoa</a></li>
+		</ul>
+	</div>
+	<div class="container">
+		<div class="tile">
+			<h3 class="tile-title">Registro</h3>
+			<div class="tile-body">
+				<form th:action="${pessoa.id == null} ? @{/pessoa/salvar_pessoa} : @{/pessoa/edit_pessoa}"
+					  th:object="${pessoa}" method="POST" autocomplete="off">
+                    <div class="row">
+                       <div class="col-xs-12 col-sm-12 col-md-12">
+                          <div th:replace="fragments/validacao :: validacao"></div>
+                          <div th:replace="fragments/alert" ></div>
+                       </div>
+                    </div>
+
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12">
+							<div class="form-group">
+								<label for="nome" class="control-label">Nome:</label> 
+								<input type="text"
+									   class="form-control"
+									   id="nome" 
+									   name="nome"
+									   th:field="*{nome}" 
+									   th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'"/>
+								<div class="invalid-feedback">
+								     <span th:errors="*{nome}"  ></span>
+								</div>	   
+							</div>
+						</div>
+					</div>
+
+
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12">
+							<div class="form-group">
+								<label for="email" class="control-label">E-mail:</label> 
+								<input type="text"
+									   class="form-control" 
+									   id="email"
+									   name="email"
+									   th:field="*{email}" 
+									   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"/>
+								<div class="invalid-feedback">
+								     <span th:errors="*{email}"  ></span>
+								</div>	   
+							</div>
+						</div>
+					</div>
+					<input type="hidden" th:field="*{id}" />
+
+					<div class="tile-footer">
+						<button type="submit" class="btn btn-primary">
+							<b>Salvar</b><span class="fa fa-check-circle"></span>
+						</button>
+						<button type="submit" 
+								class="btn btn-secondary"
+								name="action"
+								value="cancelar"
+								formnovalidate="formnovalidate">
+							<b>Cancelar</b><span class="fa fa-times-circle"></span>
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+ </section>
+ <th:block layout:fragment="javascript-extra">
+ 
+ </th:block>
+</body>
+</html>

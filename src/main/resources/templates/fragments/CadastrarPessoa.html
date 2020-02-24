@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<div class="modal fade" id="cadastrarPessoa" tabindex="-1" role="dialog" th:fragment="cadastrarPessoa">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cadastrar Nova Pessoa</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       	<div class="container">
+		<div class="tile">
+			<h3 class="tile-title">Registro</h3>
+			<div class="tile-body">
+				<form method="POST" autocomplete="off" id="cadastroFormPessoa">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div id="sucesso" class="alert alert-info hidden"></div>
+                        </div>     
+	                    <div class="col-xs-12 col-sm-12 col-md-12">
+                       		<div id="erro" class="alert alert-danger hidden"></div>
+                       	</div>	
+                    </div>  
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12">
+							<div class="form-group">
+								<label for="cadastroNomePessoa" class="control-label">Nome:</label> 
+								<input type="text"
+									   class="form-control"
+									   id="cadastroNomePessoa" 
+									   name="cadastroNomePessoa"/>
+								 <div id="erroNome" class="invalid-feedback">
+								      <span id="showErroNome"></span>
+								 </div> 
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12">
+							<div class="form-group">
+								<label for="email" class="control-label">E-mail:</label> 
+								<input type="text"
+									   class="form-control" 
+									   id="email"
+									   name="email"/>
+								<div id="erroEmail" class="invalid-feedback">
+								     <span id="showErroEmail"></span>
+								</div>	   
+							</div>
+						</div>
+					</div>
+					<div class="tile-footer">
+						<button id="btnSalvarPessoa" type="submit" class="btn btn-primary">
+							<b>Salvar</b><span class="fa fa-check-circle"></span>
+						</button>
+						<button type="reset" id="btnCancelarPessoa"
+								class="btn btn-secondary"
+                                data-dismiss="modal"
+								formnovalidate="formnovalidate">
+							<b>Cancelar</b><span class="fa fa-times-circle"></span>
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</html>

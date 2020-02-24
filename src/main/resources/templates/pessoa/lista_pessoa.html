@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+	<section layout:fragment="corpo">
+		<div class="app-title">
+			<div>
+				<h1>
+					<i class="fa fa-edit"></i>Listagem de pessoa
+				</h1>
+			</div>
+			<ul class="app-breadcrumb breadcrumb">
+				<li class="breadcrumb-item"><i class="fa fa-search fa-lg"></i></li>
+				<li class="breadcrumb-item"><a href="#">Pesquisa Pessoa</a></li>
+			</ul>
+		</div>
+		<div class="container">
+			<div class="bs-component">
+				<div class="tile">
+					<i class="fa fa-search-plus"></i><span></span>
+					<button class="btn btn-primary" type="button"
+						data-toggle="collapse" data-target="#collapseNome"
+						data-tooltip="tooltip" data-placement="top"
+						title="Pesquisar pelo nome da Pessoa">Nome</button>
+					<button class="btn btn-secondary" type="button"
+						data-toggle="collapse" data-target="#collapseCPF"
+						data-tooltip="tooltip" data-placement="top"
+						title="Pesquisar pelo cpf da Pessoa">CPF</button>
+					<button class="btn btn-warning" type="button"
+						data-toggle="collapse" data-target="#collapseCNPJ"
+						data-tooltip="tooltip" data-placement="top"
+						title="Pesquisar pelo CNPJ da Pessoa">CNPJ</button>
+				</div>
+				<div class="collapse" id="collapseNome">
+					<div class="tile">
+						<form class="form-inline" method="GET" th:object="${pessoaFiltro}">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label for="nome" class="control-label col-sm-1">Nome:</label>
+									<input type="text" class="form-control col-sm-8" name="nome"
+										id="nome" th:field="*{nome}"
+										placeholder="Digite o nome da pessoa para pesquisa." />
+									<div class="col-md-1">
+										<button type="submit" class="btn btn-primary">
+											Pesquisar<i class="fa fa-search-plus"></i>
+										</button>
+									</div>
+								</div>
+							</div>
+ 						</form>
+					</div>
+				</div>
+				<div class="collapse" id="collapseCPF"></div>
+				<div class="collapse" id="collapseCNPJ"></div>
+
+
+
+				<div id="no-more-tables">
+
+					<div class="tile">
+
+						<div class="tile-body">
+							<h3 class="tile-title">Listagem</h3>
+							<div class="form-group row">
+								<label for="pageSizeSelect" class="col-sm-2 col-form-label">
+									<b>Quantidades de Registros:</b>
+								</label>
+								<div class="col-md-1">
+									<select class="form-control pagination" id="pageSizeSelect">
+										<option th:each="pageSize : ${pageSizes}"
+											th:text="${pageSize}" th:value="${pageSize}"
+											th:selected="${pageSize} == ${size}"></option>
+									</select>
+								</div>
+							</div>
+							<table class="table table-striped table-bordered table-hover cf">
+								<thead class="cf">
+									<tr>
+										<th class="p-3 mb-2 bg-primary text-white"
+											style="font-weight: bold; text-align: center;">Id</th>
+										<th class="p-3 mb-2 bg-primary text-white"
+											style="font-weight: bold; text-align: center;">Nome</th>
+										<th class="p-3 mb-2 bg-primary text-white"
+											style="font-weight: bold; text-align: center;">E-mail</th>
+										<th class="p-3 mb-2 bg-primary text-white"
+											style="font-weight: bold; text-align: center;">Ações</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="pessoa :${pagina.conteudo}">
+										<td data-title="Id" th:text="${pessoa.id}"
+											style="text-align: center"></td>
+										<td data-title="Nome" th:text="${pessoa.nome}"
+											style="text-align: center"></td>
+										<td data-title="E-mail" th:text="${pessoa.email}"
+											style="text-align: center"></td>
+										<td data-title="Ações" style="text-align: center"><a
+											class="btn btn-info btn-sm"
+											th:href="@{/pessoa/buscar_pessoa/{id}(id=${pessoa.id})}"><i
+												class="fa fa-pencil"></i></a> <a class="btn btn-danger btn-sm"
+											th:href="@{/pessoa/excluir_pessoa/{id}(id=${pessoa.id})}"><i
+												class="fa fa-trash"></i></a> <a class="btn btn-warning btn-sm"
+											href="#"><i class="fa fa-search-plus"></i></a></td>
+									</tr>
+
+								</tbody>
+
+							</table>
+							<div class="box-footer clearfix">
+								<div class="row">
+									<div class="col-xs-12 col-md-5">
+										<div class="pagination">
+											<p>
+												Mostrando <span class="badge"
+													th:text="${pagina.size * (pagina.number-1) + 1}"></span> de
+												<span class="badge"
+													th:text="${pagina.ultima ? pagina.totalElementos : pagina.size * (pagina.number-1)+ pagina.size}"></span>
+												de <span class="badge" th:text="${pagina.totalElementos}"></span>
+												Registros de Pessoas cadastradas.
+											</p>
+										</div>
+									</div>
+									<div class="col-xs-12 col-md-7" th:if="${not pagina.vazia}">
+										<ul class='pagination pull-right'>
+											<li th:class="${pagina.primeira}?'disabled':''"><span
+												th:if='${pagina.primeira}' th:class="page-link">←
+													Primeira</span> <a th:if='${not pagina.primeira}'
+												th:href='@{${pagina.urlParaPagina(size, 0)}}'
+												th:class="page-link">← Primeira</a></li>
+											<li th:class="${pagina.hasPreviousPage}? '' : 'disabled'">
+												<span th:if='${not pagina.hasPreviousPage}'
+												th:class="page-link"><span class="fa fa-chevron-left"></span></span>
+												<a th:if='${pagina.hasPreviousPage}'
+												th:href='@{${pagina.urlParaPagina(size, pagina.number-2)}}'
+												th:class="page-link" title='Go to previous pagina'><span
+													class="fa fa-chevron-left"></span></a>
+											</li>
+											<li th:each='item : ${pagina.items}'
+												th:class="${item.current}? 'page-item active' : ''"><span
+												th:if='${item.current}' th:text='${item.number}'
+												th:class="page-link">1</span> <a th:if='${not item.current}'
+												th:class="page-link"
+												th:href='@{${pagina.urlParaPagina(size, item.number-1)}}'><span
+													th:text='${item.number}'>1</span></a></li>
+											<li th:class="${pagina.hasNextPage}? '' : 'disabled'"><span
+												th:if='${not pagina.hasNextPage}' th:class="page-link"><span
+													class="fa fa-chevron-right"></span></span> <a
+												th:if='${pagina.hasNextPage}' th:class="page-link"
+												th:href='@{${pagina.urlParaPagina(size, pagina.number+1)}}'
+												title='Go to next pagina'><span
+													class="fa fa-chevron-right"></span></a></li>
+											<li th:class="${pagina.ultima}? 'disabled' : ''"><span
+												th:if='${pagina.ultima}' th:class="page-link">Última
+													→</span> <a th:if='${not pagina.ultima}' th:class="page-link"
+												th:href='@{${pagina.urlParaPagina(size, pagina.total-1)}}'>Última
+													→</a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<a class="btn btn-success" th:href="@{/pessoa/nova_pessoa}"><i
+								class="fa fa-plus-circle"></i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<th:block layout:fragment="javascript-extra">
+		<script>
+	   $(document).ready(function(){
+		   changePageAndSize();
+	   });
+	   
+	   function changePageAndSize(){
+		   $('#pageSizeSelect').change(function(e){
+			   window.location.replace("/pessoa/lista_pessoa?size="+this.value+"&page=0");
+		   });
+	   }
+	</script>
+	</th:block>
+</body>
+</html>

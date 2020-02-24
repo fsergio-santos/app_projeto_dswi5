@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+
+</head>
+<body>
+    <section layout:fragment="corpo">
+	<div class="app-title">
+		<div>
+			<h1>
+				<i class="fa fa-edit"></i>Cadastro de pessoa_fisica
+			</h1>
+		</div>
+		<ul class="app-breadcrumb breadcrumb">
+			<li class="breadcrumb-item"><i class="fa fa-search fa-lg"></i></li>
+			<li class="breadcrumb-item"><a th:href="@{/pessoa_fisica/lista_pessoa_fisica}">Pesquisa Pessoa</a></li>
+		</ul>
+	</div>
+	<div class="container">
+		<div class="tile">
+			<h3 class="tile-title">Registro</h3>
+			<div class="tile-body">
+				<form th:action="${pessoa_fisica.id == null} ? @{/pessoa_fisica/salvar_pessoa_fisica} : @{/pessoa_fisica/edit_pessoa_fisica}"
+					  th:object="${pessoa_fisica}" method="POST" autocomplete="off">
+                    <div class="row">
+                       <div class="col-xs-12 col-sm-12 col-md-12">
+                          <div th:replace="fragments/validacao :: validacao"></div>
+                          <div th:replace="fragments/alert" ></div>
+                       </div>
+                    </div>
+
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12">
+							<div class="form-group">
+								<label for="dataNascimento" class="control-label">Data Nascimento:</label> 
+								<input type="text"
+									   class="form-control"
+									   id="dataNascimento" 
+									   name="dataNascimento"
+									   th:field="*{dataNascimento}" 
+									   th:classappend="${#fields.hasErrors('dataNascimento')} ? 'is-invalid'"/>
+								<div class="invalid-feedback">
+								     <span th:errors="*{dataNascimento}"  ></span>
+								</div>	   
+							</div>
+						</div>
+					</div>
+
+
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12">
+							<div class="form-group">
+								<label for="nomePai" class="control-label">Nome do Pai:</label> 
+								<input type="text"
+									   class="form-control" 
+									   id="nomePai"
+									   name="nomePai"
+									   th:field="*{nomePai}" 
+									   th:classappend="${#fields.hasErrors('nomePai')} ? 'is-invalid'"/>
+								<div class="invalid-feedback">
+								     <span th:errors="*{nomePai}"  ></span>
+								</div>	   
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12">
+							<div class="form-group">
+								<label for="nomeMae" class="control-label">Nome da Mãe:</label> 
+								<input type="text"
+									   class="form-control" 
+									   id="nomeMae"
+									   name="nomeMae"
+									   th:field="*{nomeMae}" 
+									   th:classappend="${#fields.hasErrors('nomeMae')} ? 'is-invalid'"/>
+								<div class="invalid-feedback">
+								     <span th:errors="*{nomeMae}"  ></span>
+								</div>	   
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12">
+							<div class="form-group">
+								<label for="sexo" class="control-label">Sexo:</label> 
+								<select class="form-control" 
+									   id="sexo"
+									   name="sexo"
+									   th:field="*{sexo}">
+								       <option value="">Selecione uma opção</option>
+								       <option th:each="sexo : ${sexos}" 
+								               th:value="${sexo}"
+								       		   th:text="${sexo.descricao}"	
+								       		   th:classappend="${#fields.hasErrors('sexo')} ? 'is-invalid'">
+								       </option>	   
+								</select>	   
+								<div class="invalid-feedback">
+								     <span th:errors="*{nomePai}"  ></span>
+								</div>	   
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12">
+							<div class="form-group">
+								<label for="cpf" class="control-label">CPF:</label> 
+								<input type="text"
+									   class="form-control" 
+									   id="cpf"
+									   name="cpf"
+									   th:field="*{cpf}" 
+									   th:classappend="${#fields.hasErrors('cpf')} ? 'is-invalid'"/>
+								<div class="invalid-feedback">
+								     <span th:errors="*{cpf}"  ></span>
+								</div>	   
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12">
+							<div class="form-group">
+								<label for="nome" class="control-label">Nome:</label> 
+								<div class="input-group">
+								    <span class="input-group-prepend">
+								       <span class="input-group-text fa fa-list fa-lg"></span>
+								    </span>
+									<input type="text"
+										   class="form-control" 
+										   id="nome"
+										   name="nome"
+										   th:field="*{pessoa.nome}" 
+										   th:classappend="${#fields.hasErrors('pessoa.nome')} ? 'is-invalid'"/>
+								    <input id="codigoPessoa" th:field="*{pessoa}" type="hidden"/>
+									<span class="input-group-append">
+									   <button class="btn btn-default" type="button"
+									       data-toggle="modal" data-target="#pesquisaPessoa" >
+									       <i class="fa fa-search fa-lg"></i>
+									   </button>
+									   <button class="btn btn-default" type="button"
+									       data-toggle="modal" data-target="#cadastrarPessoa" >
+									       <i class="fa fa-plus fa-lg"></i>
+									   </button>
+									
+									</span>	   
+									<div class="invalid-feedback">
+									     <span th:errors="*{pessoa.nome}"  ></span>
+									</div>
+								</div>	   
+							</div>
+						</div>
+					</div>
+					<input type="hidden" th:field="*{id}" />
+
+					<div class="tile-footer">
+						<button id="botaoSalvarPessoaFisica" type="submit" class="btn btn-primary">
+							<b>Salvar</b><span class="fa fa-check-circle"></span>
+						</button>
+						<button type="submit" 
+								class="btn btn-secondary"
+								name="action"
+								value="cancelar"
+								formnovalidate="formnovalidate">
+							<b>Cancelar</b><span class="fa fa-times-circle"></span>
+						</button>
+					</div>
+					<th:block th:replace="fragments/PesquisaPessoa :: pesquisaPessoa"/>
+					<th:block th:replace="fragments/CadastrarPessoa :: cadastrarPessoa"/>
+				</form>
+			</div>
+		</div>
+	</div>
+ </section>
+ <th:block layout:fragment="javascript-extra">
+     
+     <script th:src="@{/js/datatable/jquery.dataTables.min.js}"></script>
+     <script th:src="@{/js/datatable/dataTables.bootstrap4.min.js}"></script> 
+     <script th:src="@{/js/datatable/dataTables.select.min.js}"></script> 
+  
+     <script>
+     
+           $(document).ready(function(){
+        	   $('#tabela_pessoa').hide();
+        	   $('#erro').hide();
+        	   $('#sucesso').hide();
+        	   $('#erroPesquisa').hide();
+        	   
+        	   var cadastroNomePessoa = $('#cadastroNomePessoa');
+        	   var erroNome       = $('#erroNome');
+        	   var showErroNome   = $('#showErroNome');
+        	   var emailPessoa    = $('#email');
+        	   var erroEmail      = $('#erroEmail');
+        	   var showErroEmail  = $('#showErroEmail');
+        	   
+        	   cadastroNomePessoa.blur(function(){
+        		   if ($.trim(cadastroNomePessoa.val()).length==0){
+        			   cadastroNomePessoa.addClass('is-invalid');
+                       erroNome.addClass('invalid-feedback');
+                       showErroNome.html('O nome deve ser informado').show();
+                       cadastroNomePessoa.focus();
+        		   } else {
+        			   cadastroNomePessoa.removeClass('is-invalid');
+                       erroNome.removeClass('invalid-feedback');
+                       showErroNome.html('').hide();
+        		   }
+        	   });
+        	   
+        	   emailPessoa.blur(function(){
+        		   
+        	   });
+        	   
+           });
+           
+           $('#cadastrarPessoa').find('#btnCancelarPessoa').on('click', function(event){
+        	   event.preventDefault();
+        	   onResetForm(this);
+           }); 	   
+           
+           $('#cadastrarPessoa').find('#btnSalvarPessoa').on('click', function(event){
+        	   event.preventDefault();
+        	   
+        	   console.log($('#cadastroNomePessoa').val());
+        	   console.log($('#email').val());
+        	   
+        	   var pessoaDTO = {
+        		   'nome': $('#cadastroNomePessoa').val(),
+        		   'email': $('#email').val(),  	   
+        	   };
+ 
+        	   console.log(pessoaDTO);
+        	   
+        	   
+        	   $.ajax({
+        		   url:'/rest/pessoa/salvar_pessoa',
+        		   method:'POST',
+        		   data:JSON.stringify(pessoaDTO),
+        		   dataType:'JSON',
+        		   contentType:'application/json; charset=utf-8',
+        		   success: function(data){
+        			   if (data.validated){
+        				   $('#sucesso').removeClass('hidden');
+        				   $('#sucesso').html(data.mensagem).show();
+        			 	   $('#erro').addClass('hidden');
+        			 	   $('#codigoPessoa').val(data.idClasse);
+        			 	   $('#nome').val($('#cadastroNomePessoa').val());
+                           setTimeout(onResetForm(this), 3000);
+        			   } else {
+        				   $('#erro').removeClass('hidden');
+                           var erroInfo = ""; 
+                           $.each(data.erroMensagem, function(key, value){
+                        	   erroInfo += "<br>"+'<i class="fa fa-info-circle"></i>'+'&nbsp'+'&nbsp'+value;
+                        	   erroCampo(key, value);
+                           });
+                           $('#erro').html('Verifique '+erroInfo);
+                           $('#erro').show('slow');
+                      }
+        		   },
+        		   error:function(jqXHR, textStatus, errorThrown){
+        			   alert('erro no processamento');
+        		   }
+        	   }); 
+        	   
+           });
+
+           
+           function onResetForm(e){
+        	   $('#sucesso').addClass('hidden');
+        	   $('#sucesso').html('').hide();
+        	   $('#erro').html('').hide();
+        	   $('#cadastroFormPessoa').trigger('reset');
+        	   $('#cadastroNomePessoa').removeClass('is-invalid');
+        	   $('#erroNome').removeClass('invalid-feedback');
+               $('#showErroNome').html('').hide(); 
+        	   $('#email').removeClass('is-invalid');
+           	   $('#erroEmail').removeClass('invalid-feedback');
+           	   $('#showErroEmail').html('').hide();
+        	   $('#cadastrarPessoa').modal('hide');
+        	   $('#cadastroNomePessoa').val('');
+        	   $('#email').val('');
+           }
+           
+           function erroCampo(key, value){
+        	   if (key=="nome"){
+        		   $('#cadastroNomePessoa').addClass('is-invalid');
+        		   $('#erroNome').addClass('invalid-feedback');
+                   $('#showErroNome').html(value).show(); 
+        	   }
+        	   if (key=="email"){
+        		   $('#email').addClass('is-invalid');
+            	   $('#erroEmail').addClass('invalid-feedback');
+            	   $('#showErroEmail').html(value).show();
+        	   }
+           }
+           
+           $('#btnBusca').on('click',function(event){
+        	   
+        	   event.preventDefault();
+        	   $.ajax({
+        		   url:'/rest/pessoa',
+        		   method:'GET',
+        		   data:{
+        			 nome:$('#nomePessoa').val() 
+        		   },
+        		   dataType:'JSON',
+        		   contentType:'application/json; charset=utf-8',
+        		   success: function(data){
+        			   pesquisaConcluida(data);
+        			   $('#erroPesquisa').html('').hide();
+        		   },
+        		   error:function(jqXHR, textStatus, errorThrown){
+        			   $('#erroPesquisa').removeClass('hidden');
+        			   $('#erroPesquisa').html('Informe pelo menos três caracteres').show('slow');
+        		   }
+        	   }); 
+        	 
+        	   
+        	   function pesquisaConcluida(resultado){
+        
+        		   $('#tabela_pessoa').show();
+        
+        		   var tabelaPessoa = $('#tabelaPessoa').DataTable({
+        				
+        				select : true,
+        				destroy: true,
+        				data : resultado,
+        				lengthMenu : [ 5, 10, 25 ],
+        				searching : true,
+        	     		paging : true,
+        				aaSorting : [ [ 1, 'desc' ],[ 2, 'asc' ] ], // Optional
+        				responsive : true,
+        				bAutoWidth : true,
+        				orderable : true,
+        				pagingType : "full_numbers",
+        				order : [ [ 1, 'asc' ] ],
+        				columns : [{"data":"id"},{"data":"nome"},{"data":"email"},],
+        				
+        				"language": {
+        					"sEmptyTable": "Nenhum registro encontrado",
+        				    "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+        				    "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+        				    "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+        				    "sInfoPostFix": "",
+        				    "sInfoThousands": ".",
+        				    "sLengthMenu": "_MENU_ resultados por página",
+        				    "sLoadingRecords": "Carregando...",
+        				    "sProcessing": "Processando...",
+        				    "sZeroRecords": "Nenhum registro encontrado",
+        				    "sSearch": "Pesquisar",
+        				    "oPaginate": {
+        				        "sNext": "Próximo",
+        				        "sPrevious": "Anterior",
+        				        "sFirst": "Primeiro",
+        				        "sLast": "Último"
+        				    },
+        				    "oAria": {
+        				        "sSortAscending": ": Ordenar colunas de forma ascendente",
+        				        "sSortDescending": ": Ordenar colunas de forma descendente"
+        				    }
+        		        }
+        				
+        				
+        			});
+        		   
+      
+        			$('#tabelaPessoa tbody').on('click', 'tr', function(event) {
+        				event.preventDefault();
+ 	    				let indice = tabelaPessoa.row(this).index();
+        				let pessoa = tabelaPessoa.row(indice).data();
+        				
+           			    $('#nome').val(pessoa.nome);
+           			    $('#codigoPessoa').val(pessoa.id);
+           			    $('#nomePessoa').val('');
+        				$('#pesquisaPessoa').modal('hide');
+        				$('#tabela_pessoa').hide();
+        				if ($.fn.DataTable.isDataTable('#tabelaPessoa')){
+        					$('#tabelaPessoa').DataTable().destroy();
+        					$('#tabelaPessoa').DataTable().clear();
+        				}
+        			});
+        	   }
+           });
+     
+     
+     
+     
+     </script>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ </th:block>
+</body>
+</html>
