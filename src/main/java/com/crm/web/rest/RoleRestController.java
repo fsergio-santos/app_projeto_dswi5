@@ -67,44 +67,5 @@ public class RoleRestController {
 	   return ResponseEntity.noContent().build();
 	}
 	
-	/*
-	 
-	   Começar aula de exception por aqui, 
-	   para usuario role.
-	   depois ir para exception global. 
-	 
-	@ExceptionHandler(EntidadeNaoEncontradaException.class)
-	public ResponseEntity<?> handleEntidadeNaoEncontrada(EntidadeNaoEncontradaException ex,
-			WebRequest request) {
-
-		Problem problem = Problem.builder()
-				  .addTimestamp(LocalDateTime.now())
-				  .addUserMessage(ex.getMessage()).build();
-		
-		return ResponseEntity.status( HttpStatus.NOT_FOUND).body(problem);
-	}
-	
-	@ExceptionHandler(EntidadeEmUsoException.class)
-	public ResponseEntity<?> handleEntidadeEmUso(EntidadeEmUsoException ex, WebRequest request) {
-	
-		Problem problem = Problem.builder()
-				  .addTimestamp(LocalDateTime.now())
-				  .addUserMessage(ex.getMessage()).build();
-		
-		return ResponseEntity.status(HttpStatus.CONFLICT).body(problem);
-	}
-	
-	@ExceptionHandler(NegocioException.class)
-	public ResponseEntity<?> handleNegocio(NegocioException ex, WebRequest request) {
-		
-		Problem problem = Problem.builder()
-				  .addTimestamp(LocalDateTime.now())
-				  .addUserMessage(ex.getMessage()).build();
-		
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problem);
-	}
-	
-	*/
-	
 	
 }

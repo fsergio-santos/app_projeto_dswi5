@@ -38,10 +38,21 @@ public class UsuarioServiceImpl implements UsuarioService {
 	
 	@Override
 	public Usuario save(Usuario usuario) {
+		
 		List<GrantedAuthority> autoridade = new ArrayList<GrantedAuthority>();
+		
+		usuarioRepository.detached(usuario);
+		
+		Optional<Usuario> usuarioCadastrado = this.findUsuarioByEmail(usuario.getEmail());
+		
+		if (usuarioCadastrado.isPresent() && !usuarioCadastrado.get().equals(usuario)) {
+			throw new NegocioException(String.format("Já existe usuário cadastrado com esse e-mail %d", usuario.getEmail()));
+		}
+		
 		if (usuario.getRoles().isEmpty()) {
 			throw new NegocioException("Usuário tem que pertencer a um grupo do sistema");
 		}
+		
 		for (int i = 0; i < usuario.getRoles().size(); i++) {
 			try {
 	            Role roleCadastrado = roleRepository.getOne(usuario.getRoles().get(i).getId());

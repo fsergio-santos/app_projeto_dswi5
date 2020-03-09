@@ -44,7 +44,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 					initialValue=1, allocationSize=1)
 public class Usuario implements UserDetails, Serializable {
 
-
 	private static final long serialVersionUID = 5737698097167590600L;
 	
 	private Long id;
@@ -53,7 +52,7 @@ public class Usuario implements UserDetails, Serializable {
 	private String password;
 	private String contraSenha;
 	private Date lastLogin;
-	private boolean ativo = false;
+	private boolean ativo = Boolean.TRUE;
 	
 	private List<Role> roles = new ArrayList<>();
 	

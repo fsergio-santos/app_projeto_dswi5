@@ -10,4 +10,6 @@ public interface UsuarioRepositoryQuery {
 	
 	Optional<Usuario> findUsuarioActiveByEmail(String email);
 	
+	void detached(Usuario usuario);
+	
 }

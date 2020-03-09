@@ -35,18 +35,7 @@ public class UsuarioRepositoryImpl implements UsuarioRepositoryQuery {
 		return usuario;
 	}
 	
-	//sugestão
-	/*public Usuario findUsuarioActiveByEmail(String email) {
-		TypedQuery<Usuario> query = entityManager
-				.createQuery("SELECT u FROM Usuario u "
-					    	+"lower(u.email) = lower(:email) "
-					    	+"u.ativo = true",Usuario.class);
-		query.setParameter("email", email);
-		Usuario usuario = query.getSingleResult();
-		return usuario;
-		
-	}*/
-	
+
 	@Override
 	public Optional<Usuario> findUsuarioActiveByEmail(String email){
 		
@@ -64,6 +53,11 @@ public class UsuarioRepositoryImpl implements UsuarioRepositoryQuery {
 				    .getResultList()
 				    .stream()
 				    .findFirst();
+	}
+
+	@Override
+	public void detached(Usuario usuario) {
+		entityManager.detach(usuario);
 	}
 	
 

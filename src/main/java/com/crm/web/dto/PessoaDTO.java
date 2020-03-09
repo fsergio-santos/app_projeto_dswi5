@@ -1,4 +1,4 @@
-package com.crm.domain.model.dto;
+package com.crm.web.dto;
 
 import javax.validation.constraints.NotNull;
 

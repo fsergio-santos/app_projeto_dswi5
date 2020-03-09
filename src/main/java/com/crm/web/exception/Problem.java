@@ -18,7 +18,6 @@ public class Problem {
 	private String userMessage; 
 	private List<Fields> fields;
 	
-	
 	public Integer getStatus() {
 		return status;
 	}
@@ -74,7 +73,7 @@ public class Problem {
 	public void setFields(List<Fields> fields) {
 		this.fields = fields;
 	}
-
+	
 	public static Builder builder() {
         return new Builder();
     }
@@ -118,11 +117,12 @@ public class Problem {
 			return this;
 		}
 		
-		public Builder addListUser(List<Fields> fields) {
+		public Builder addListFields(List<Fields> fields) {
 			this.problem.fields = fields;
 			return this;
 		}
 		
+	
 		public Problem build() {
 			return this.problem;
 		}

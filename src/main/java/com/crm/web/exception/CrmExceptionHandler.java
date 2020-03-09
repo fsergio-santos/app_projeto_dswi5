@@ -21,25 +21,45 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.validation.FieldError;
 
 import com.crm.domain.service.exceptions.EntidadeEmUsoException;
 import com.crm.domain.service.exceptions.EntidadeNaoEncontradaException;
 import com.crm.domain.service.exceptions.NegocioException;
+import com.crm.domain.service.exceptions.ValidacaoException;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 
 @ControllerAdvice
 public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
-
+    
+	// para tratar erros não esperados - não tratados....
+	
 	public static final String MSG_ERRO_GENERICA_USUARIO_FINAL
 		= "Ocorreu um erro interno inesperado no sistema. Tente novamente e se "
 				+ "o problema persistir, entre em contato com o administrador do sistema.";
 	
-	@Autowired  //AULA 11
+	@Autowired  //AULA 11 - 3
 	private MessageSource messageSource;
 	
-	//3 aula sobre validação
+	/*
+	 * Tratando os erros nas propriedades quando estás estão 
+	 * sendo atualizadas de forma individual pelo comando PATCH
+	 * onde as propriedades estão marcadas no bean validation
+	 */
+	@ExceptionHandler({ ValidacaoException.class })
+	public ResponseEntity<Object> handleValidacaoException(ValidacaoException ex, WebRequest request) {
+		return handleValidationInternal(ex, ex.getBindingResult(), new HttpHeaders(), 
+				HttpStatus.BAD_REQUEST, request);
+	}
+	
+	
+	/*
+	 * 3 aula sobre validação a partir do dos dados - propriedades
+	 * com a notação do bean validation.  
+	 */
+	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -62,15 +82,17 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 	        
 	    Problem problem = createBuilder(status, problemType, detail)
 	        .addUserMessage(detail)
-	        .addListUser(fields)
+	        .addListFields(fields)
 	        .build();
 	    
 	    return handleExceptionInternal(ex, problem, headers, status, request);
 	}
 	
-	
-	
-	
+	/*
+	 * 
+	 * Tratar demais exception não tratadas até aqui... no desenvolvimento. 
+	 * 
+	 */
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
 		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;		
@@ -83,8 +105,27 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
 	
-	@Override
-	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, 
+	/*
+	 * exception para tratar quando uma url não existe, ou não é encontrada. 
+	 * exemplo. http://localhost:8080/usuariooooos/buscar/1
+	 * 
+	 * essa url não existe..
+	 * para funcionar devemos configurar no application.properties duas propriedades. 
+	 * 
+	 * spring.mvc.throw-exception-if-no-handler-found=true
+	 * spring.resources.add-mappings=false - só que desabilita o recurso do spring 
+	 * para fornecer dados estaticos de uma aplicação normal. (web)
+	 * 
+	 * @Override
+	 * protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, 
+	 * 
+	 * fazer configuração no ProjetoApplication.java - controlador inicial do sistema;
+	 * sua localização é o pacote base com.crm - nesse exemplo.  
+	 * 
+	 */
+	
+	@ExceptionHandler(NoHandlerFoundException.class)
+	public ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, 
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		
 		ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
@@ -98,6 +139,19 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
 	
+	
+	/*
+	 *  passando argumento invalido na url 
+	 *  http://localhost:8080/usuario/buscar/aaaaaaa  ---> exemplo...
+	 *  
+	  1. MethodArgumentTypeMismatchException é um subtipo de TypeMismatchException
+	  2. ResponseEntityExceptionHandler já trata TypeMismatchException de forma mais abrangente
+	  3. Então, especializamos o método handleTypeMismatch e verificamos se a exception
+	     é uma instância de MethodArgumentTypeMismatchException
+	  4. Se for, chamamos um método especialista em tratar esse tipo de exception
+	  5. Poderíamos fazer tudo dentro de handleTypeMismatch, mas preferi separar em outro método
+	 * 
+	 */
 	@Override
 	protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
@@ -109,7 +163,11 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 	
 		return super.handleTypeMismatch(ex, headers, status, request);
 	}
-	
+	/*
+	 * método chamadpo para tratar tipo inválido na url 
+	 * a chamada é feita pela handleTypeMIsmatch..
+	 * 
+	 */
 	private ResponseEntity<Object> handleMethodArgumentTypeMismatch(
 			MethodArgumentTypeMismatchException ex, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
@@ -126,11 +184,25 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
-	
-	@Override
+	/*
+	 *  1-) Método que verifica se o conteúdo passado pelo usuário está correto. 
+	 *      através da excessão "InvalidFormatException" chamando a função handleInvalidFormat
+	 *   
+	 *  2 - Método que verifica se o usuário passaou uma propriedade que não existe na entidade,
+	 *  para verificar essa possibilidade é necessário adicionar no aqruivo application.properties
+	 *  o seguinte argumento "spring.jackson.deserialization.fail-on-unknown-properties=true" para 
+	 *  verificar se a propriedade existe ou não.
+	 *  Ainda para verificar se a propriendade está marcada com @JsonIgnore devemos colocar o argumento 
+	 *  "spring.jackson.deserialization.fail-on-ignored-properties=true".
+	 *  chamando handlePropertyBinding
+	 *   
+	 *  3-) trata também atualizações do comando PATCH
+	 * 
+	 */
+	@Override //aula 4 e 5- erro de sintexe no envio da mensagem ---
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		Throwable rootCause = ExceptionUtils.getRootCause(ex);
+		Throwable rootCause = ExceptionUtils.getRootCause(ex);  //id:"aaa"
 		
 		if (rootCause instanceof InvalidFormatException) {
 			return handleInvalidFormat((InvalidFormatException) rootCause, headers, status, request);
@@ -147,7 +219,10 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
-	
+	/*
+	 * A função é chamada para verificar se a propriedade não existe e 
+	 * se ela está marcada com @JsonIgnore.
+	 */
 	private ResponseEntity<Object> handlePropertyBinding(PropertyBindingException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		
@@ -163,7 +238,10 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
-	
+    
+	/*
+	 * Para tratar se o conteúdo da propriedade passada está correto ou não
+	 */
 	private ResponseEntity<Object> handleInvalidFormat(InvalidFormatException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 
@@ -186,12 +264,9 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 	 * começa as aulas com tratamento de erros globais no sistema
 	 * 1 entidade não encontrada
 	 * 2 Entidade em uso 
-	 * 
+	 * tratando se a entidade existe no banco de dados. 
 	 * 
 	 */
-	
-	
-	
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	public ResponseEntity<?> handleEntidadeNaoEncontrada(EntidadeNaoEncontradaException ex,
 			WebRequest request) {
@@ -207,6 +282,11 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
 	
+	/*
+	 * trata se a entidade está sendo usada em outro registro. 
+	 * exemplo Usuario possui roles cadastradas. quando tenta
+	 * apagar uma role que está atribuida a um usuário. 
+	 */
 	@ExceptionHandler(EntidadeEmUsoException.class)
 	public ResponseEntity<?> handleEntidadeEmUso(EntidadeEmUsoException ex, WebRequest request) {
 		
@@ -221,6 +301,11 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
 	
+	
+	/*
+	 * Exception para tratar quando uma regra de negócio está sendo violada. 
+	 * Quando querer uma mensagem genérica. 
+	 */
 	@ExceptionHandler(NegocioException.class)
 	public ResponseEntity<?> handleNegocio(NegocioException ex, WebRequest request) {
 
@@ -235,9 +320,38 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
 	
-	
+	//aula sobre validação de um campo através do patch
+	/*
+	 *  exception para tratar que há um erro no atributo
+	 *  quando atualizado pelo path, através do bean validation
+	 */
+	private ResponseEntity<Object> handleValidationInternal(Exception ex, BindingResult bindingResult, HttpHeaders headers,
+			HttpStatus status, WebRequest request) {
+		ProblemType problemType = ProblemType.DADOS_INVALIDOS;
+	    String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
+	    
+	    List<Fields> objects = (List<Fields>) bindingResult.getAllErrors().stream()
+	    		.map(fieldError -> {
+	    			String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+	    			Fields field = new Fields();
+	    			if (fieldError instanceof FieldError) {
+	    				field.setNome(((FieldError) fieldError).getField());
+	    			}
+			   	   	field.setUserMessage(message);
+			   	   	return field;
+        		})
+	    		.collect(Collectors.toList());
+	    
+	    Problem problem = createBuilder(status, problemType, detail)
+	        .addUserMessage(detail)
+	        .addListFields(objects)
+	        .build();
+	    
+	    return handleExceptionInternal(ex, problem, headers, status, request);
+	}
 	/*
 	 * sobreescrevendo o método da classe pai para todoas as exceptions não tratada no sistema
+	 * ResponseEntityExceptionHandler
 	 * 3
 	 */
 	@Override
