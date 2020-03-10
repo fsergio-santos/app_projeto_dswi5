@@ -85,7 +85,7 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 	        .addListFields(fields)
 	        .build();
 	    
-	    return handleExceptionInternal(ex, problem, headers, status, request);
+	    return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
 	
 	/*
@@ -115,17 +115,10 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 	 * spring.mvc.throw-exception-if-no-handler-found=true
 	 * spring.resources.add-mappings=false - só que desabilita o recurso do spring 
 	 * para fornecer dados estaticos de uma aplicação normal. (web)
-	 * 
-	 * @Override
-	 * protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, 
-	 * 
-	 * fazer configuração no ProjetoApplication.java - controlador inicial do sistema;
-	 * sua localização é o pacote base com.crm - nesse exemplo.  
-	 * 
 	 */
-	
-	@ExceptionHandler(NoHandlerFoundException.class)
-	public ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, 
+
+	@Override
+	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, 
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		
 		ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
@@ -136,7 +129,7 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 				.addUserMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
 				.build();
 		
-		return handleExceptionInternal(ex, problem, headers, status, request);
+		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
 	
 	
@@ -161,7 +154,7 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 					(MethodArgumentTypeMismatchException) ex, headers, status, request);
 		}
 	
-		return super.handleTypeMismatch(ex, headers, status, request);
+		return super.handleTypeMismatch(ex, new HttpHeaders(), status, request);
 	}
 	/*
 	 * método chamadpo para tratar tipo inválido na url 
@@ -182,7 +175,7 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 				.addUserMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
 				.build();
 
-		return handleExceptionInternal(ex, problem, headers, status, request);
+		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
 	/*
 	 *  1-) Método que verifica se o conteúdo passado pelo usuário está correto. 
@@ -217,7 +210,7 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 				.addUserMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
 				.build();
 		
-		return handleExceptionInternal(ex, problem, headers, status, request);
+		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
 	/*
 	 * A função é chamada para verificar se a propriedade não existe e 
@@ -236,7 +229,7 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 				.addUserMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
 				.build();
 		
-		return handleExceptionInternal(ex, problem, headers, status, request);
+		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
     
 	/*
@@ -256,7 +249,7 @@ public class CrmExceptionHandler extends ResponseEntityExceptionHandler {
 				.addUserMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
 				.build();
 		
-		return handleExceptionInternal(ex, problem, headers, status, request);
+		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
 
 	

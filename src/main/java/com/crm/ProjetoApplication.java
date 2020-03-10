@@ -7,15 +7,10 @@ import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
-@EnableWebMvc
 public class ProjetoApplication {
 
 	public static void main(String[] args) {
-		//SpringApplication.run(ProjetoApplication.class, args);
-		
-		ApplicationContext ctx = SpringApplication.run(ProjetoApplication.class, args);
-		DispatcherServlet dispatcherServlet = (DispatcherServlet)ctx.getBean("dispatcherServlet");
-        dispatcherServlet.setThrowExceptionIfNoHandlerFound(true);
+		SpringApplication.run(ProjetoApplication.class, args);
 	}
 
 }
